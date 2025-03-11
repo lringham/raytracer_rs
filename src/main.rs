@@ -4,14 +4,20 @@ mod raycast;
 mod scene;
 mod vec3f;
 
+use std::env;
+
 use raycast::{Ray, Raycastable};
 use scene::Scene;
 use vec3f::Vec3f;
 
 fn main() {
-
     // Load scene
-    let scene = Scene::from("scene.json").expect("Failed to load scene");
+    let mut scene_path = "scene.json";
+    let args: Vec<_> = env::args().collect();
+    if args.len() > 1 {
+        scene_path = &args[1];        
+    }
+    let scene = Scene::from(scene_path).expect("Failed to load scene");
 
     // Setup framebuffer
     let px_size = 0.01;
