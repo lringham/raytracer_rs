@@ -11,33 +11,31 @@ use scene::Scene;
 use vec3f::Vec3f;
 
 fn shade(scene: &Scene, res: &RaycastResult) -> Vec3f {
-
     let l = (scene.light_pos - res.hit).normalized();
-    let v = (scene.camera_pos - res.hit).normalized();                    
+    let v = (scene.camera_pos - res.hit).normalized();
     let h = (l + v).normalized();
 
-    // ambient
     let ambient = 0.1;
-
-    // diffuse
     let lambertian = res.normal.dot(&l).max(0.0);
-    
-    // specular 
-    let specular = res.normal.dot(&h).max(0.0); 
+    let specular = res.normal.dot(&h).max(0.0);
     let specular = specular.powi(30);
-    
-    // Blinn Phong
+
     scene.material_col * (ambient + lambertian) + specular * scene.light_col
+}
+
+fn get_scene_path() -> Option<String> {
+    let args: Vec<_> = env::args().collect();
+    if args.len() > 1 {
+        Some(args[1].clone())
+    } else {
+        None
+    }
 }
 
 fn main() {
     // Load scene
-    let mut scene_path = "scene.json";
-    let args: Vec<_> = env::args().collect();
-    if args.len() > 1 {
-        scene_path = &args[1];        
-    }
-    let scene = Scene::from(scene_path).expect("Failed to load scene");
+    let scene_path = get_scene_path().expect("! scene.json path not provided");
+    let scene = Scene::from(&scene_path).expect("Failed to load scene");
 
     // Setup framebuffer
     let px_size = 0.01;
@@ -48,11 +46,10 @@ fn main() {
     // Main loop
     for y in 0..width {
         for x in 0..height {
-
-            // Create a ray 
+            // Create a ray
             let dir = Vec3f::new(
-                px_size * (x - width / 2) as f32,
-                px_size * (y - height / 2) as f32,
+                px_size * (x as i32 - width as i32 / 2) as f32,
+                px_size * (y as i32 - height as i32 / 2) as f32,
                 -1.0,
             )
             .normalized();

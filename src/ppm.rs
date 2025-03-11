@@ -1,25 +1,26 @@
 use std::fs::File;
 use std::io::Write;
+use std::ops::Index;
 
 use crate::vec3f::Vec3f;
 
 pub struct Ppm {
-    width: i32,
-    height: i32,
+    width: usize,
+    height: usize,
     data: Vec<(u8, u8, u8)>,
 }
 
-fn color_to_tuple(color: Vec3f) -> (u8, u8, u8) {
+pub fn color_to_tuple(color: Vec3f) -> (u8, u8, u8) {
     (
-        (255.0 * color.x.sqrt()) as u8,
-        (255.0 * color.y.sqrt()) as u8,
-        (255.0 * color.z.sqrt()) as u8,
+        (255.0 * color.x.min(1.0).sqrt()) as u8,
+        (255.0 * color.y.min(1.0).sqrt()) as u8,
+        (255.0 * color.z.min(1.0).sqrt()) as u8,
     )
 }
 
 #[allow(dead_code)]
 impl Ppm {
-    pub fn new(width: i32, height: i32) -> Self {
+    pub fn new(width: usize, height: usize) -> Self {
         let data = vec![(0, 0, 0); (width * height) as usize];
         Self {
             width,
@@ -28,12 +29,12 @@ impl Ppm {
         }
     }
 
-    pub fn set(&mut self, x: i32, y: i32, color: Vec3f) {
-        self.data[(x + y * self.width) as usize] = color_to_tuple(color);
+    pub fn set(&mut self, x: usize, y: usize, color: Vec3f) {
+        self.data[x + y * self.width] = color_to_tuple(color);
     }
 
-    pub fn get(&self, x: i32, y: i32) -> Vec3f {
-        let (r, g, b) = self.data[(x + y * self.width) as usize];
+    pub fn get(&self, x: usize, y: usize) -> Vec3f {
+        let (r, g, b) = self.data[x + y * self.width];
         Vec3f {
             x: (r as f32 / 255.0).powf(2.0),
             y: (g as f32 / 255.0).powf(2.0),
@@ -41,11 +42,11 @@ impl Ppm {
         }
     }
 
-    pub fn width(&self) -> i32 {
+    pub fn width(&self) -> usize {
         self.width
     }
 
-    pub fn height(&self) -> i32 {
+    pub fn height(&self) -> usize {
         self.height
     }
 

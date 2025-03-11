@@ -1,6 +1,5 @@
 use crate::{geometry, vec3f};
 
-
 #[derive(Debug, Copy, Clone)]
 pub struct Ray {
     pub origin: vec3f::Vec3f,
