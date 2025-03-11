@@ -1,9 +1,12 @@
 # rt
 Knocking the rust off my rust skills with a small raytracer... for fun!
 
+Glaring omissions:
+ - proper matierals
+ - recursion
+ - other geometric types
+
 ## Ideas
-[ ] draw to window using winnit and softbuffer
 [ ] get scene file and or distribute computation using tcp
-[ ] multi-threading
 [ ] torrance-sparrow
 [ ] path tracing
