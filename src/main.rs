@@ -6,9 +6,29 @@ mod vec3f;
 
 use std::env;
 
-use raycast::{Ray, Raycastable};
+use raycast::{Ray, RaycastResult, Raycastable};
 use scene::Scene;
 use vec3f::Vec3f;
+
+fn shade(scene: &Scene, res: &RaycastResult) -> Vec3f {
+
+    let l = (scene.light_pos - res.hit).normalized();
+    let v = (scene.camera_pos - res.hit).normalized();                    
+    let h = (l + v).normalized();
+
+    // ambient
+    let ambient = 0.1;
+
+    // diffuse
+    let lambertian = res.normal.dot(&l).max(0.0);
+    
+    // specular 
+    let specular = res.normal.dot(&h).max(0.0); 
+    let specular = specular.powi(30);
+    
+    // Blinn Phong
+    scene.material_col * (ambient + lambertian) + specular * scene.light_col
+}
 
 fn main() {
     // Load scene
@@ -39,29 +59,16 @@ fn main() {
             let ray = Ray::new(scene.camera_pos, dir);
 
             // Raycast scene
+            let mut prev_dist = f32::MAX;
             let mut color = scene.bg_color;
             for geom in scene.geometry.iter() {
-                let hit = geom.raycast(&ray);                
+                let hit = geom.raycast(&ray);
                 if let Some(res) = hit {
-                    let l = (scene.light_pos - res.hit).normalized();
-                    let v = (scene.camera_pos - res.hit).normalized();                    
-                    let h = (l + v).normalized();
-
-                    // ambient
-                    let ambient = 0.1;
-
-                    // diffuse
-                    let lambertian = res.normal.dot(&l).max(0.0);
-                    
-                    // specular 
-                    let specular = res.normal.dot(&h).max(0.0); 
-                    let specular = specular.powi(30);
-                    
-                    // Blinn Phong
-                    color = scene.material_col * (ambient + lambertian) + specular * scene.light_col;
+                    if res.distance < prev_dist {
+                        prev_dist = res.distance;
+                        color = shade(&scene, &res);
+                    }
                 }
-
-                // Write to FB
                 framebuffer.set(x, height - 1 - y, color);
             }
         }
