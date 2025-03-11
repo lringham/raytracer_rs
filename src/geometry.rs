@@ -8,24 +8,15 @@ pub struct Sphere {
     pub radius: f32,
 }
 
+#[allow(dead_code)]
 impl Sphere {
     pub fn new(center: vec3f::Vec3f, radius: f32) -> Self {
         Sphere { center, radius }
     }
 }
 
-#[derive(Debug, Copy, Clone)]
-pub struct Ray {
-    pub origin: vec3f::Vec3f,
-    pub direction: vec3f::Vec3f,
-}
-
-impl Ray {
-    pub fn new(origin: vec3f::Vec3f, direction: vec3f::Vec3f) -> Self {
-        Ray { origin, direction }
-    }
-
-    pub fn at_length(&self, length: f32) -> vec3f::Vec3f {
-        self.origin + self.direction * length
-    }
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(tag = "type")]
+pub enum Geometry {
+    Sphere(Sphere),
 }

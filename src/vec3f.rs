@@ -69,12 +69,23 @@ impl Vec3f {
             z: self.z / mag,
         }
     }
+
+    pub fn reflect(&self, normal: &Vec3f) -> Vec3f {
+        2.0 * (normal.dot(self) * normal) - self
+    }
 }
 
 // Operators
 impl ops::Add<Vec3f> for Vec3f {
     type Output = Vec3f;
     fn add(self, rhs: Vec3f) -> Vec3f {
+        Vec3f::add(&self, &rhs)
+    }
+}
+
+impl ops::Add<&Vec3f> for Vec3f {
+    type Output = Vec3f;
+    fn add(self, rhs: &Vec3f) -> Vec3f {
         Vec3f::add(&self, &rhs)
     }
 }
@@ -86,9 +97,37 @@ impl ops::Sub<Vec3f> for Vec3f {
     }
 }
 
+impl ops::Sub<&Vec3f> for Vec3f {
+    type Output = Vec3f;
+    fn sub(self, rhs: &Vec3f) -> Vec3f {
+        Vec3f::sub(&self, rhs)
+    }
+}
+
 impl ops::Mul<f32> for Vec3f {
     type Output = Vec3f;
     fn mul(self, rhs: f32) -> Self::Output {
         Vec3f::scale(&self, rhs)
+    }
+}
+
+impl ops::Mul<Vec3f> for f32 {
+    type Output = Vec3f;
+    fn mul(self, rhs: Vec3f) -> Self::Output {
+        Vec3f::scale(&rhs, self)
+    }
+}
+
+impl ops::Mul<f32> for &Vec3f {
+    type Output = Vec3f;
+    fn mul(self, rhs: f32) -> Self::Output {
+        Vec3f::scale(&self, rhs)
+    }
+}
+
+impl ops::Mul<&Vec3f> for f32 {
+    type Output = Vec3f;
+    fn mul(self, rhs: &Vec3f) -> Self::Output {
+        Vec3f::scale(&rhs, self)
     }
 }
