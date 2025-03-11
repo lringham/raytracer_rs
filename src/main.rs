@@ -22,11 +22,11 @@ fn get_scene_path() -> Option<String> {
 
 fn main() {
     // Load scene
-    let scene_path = get_scene_path().expect("! scene.json path not provided");
-    let scene = Scene::from(&scene_path).expect("Failed to load scene");
+    let scene_path = get_scene_path().expect("Scene.json path not provided!");
+    let scene = Scene::from(&scene_path).expect("Failed to load scene!");
     let (width, height) = scene.camera.resolution;
 
-    // Main loop
+    // Trace the scene
     let mut data = vec![Vec3f::new(0.0, 0.0, 0.0); width * height];
     let chunk_size = num_cpus::get();
     data.par_chunks_mut(chunk_size)
