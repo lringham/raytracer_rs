@@ -1,3 +1,4 @@
+mod camera;
 mod geometry;
 mod ppm;
 mod raycast;
@@ -6,22 +7,9 @@ mod vec3f;
 
 use std::env;
 
-use raycast::{Ray, RaycastResult, Raycastable};
+use rayon::prelude::*;
 use scene::Scene;
 use vec3f::Vec3f;
-
-fn shade(scene: &Scene, res: &RaycastResult) -> Vec3f {
-    let l = (scene.light_pos - res.hit).normalized();
-    let v = (scene.camera_pos - res.hit).normalized();
-    let h = (l + v).normalized();
-
-    let ambient = 0.1;
-    let lambertian = res.normal.dot(&l).max(0.0);
-    let specular = res.normal.dot(&h).max(0.0);
-    let specular = specular.powi(30);
-
-    scene.material_col * (ambient + lambertian) + specular * scene.light_col
-}
 
 fn get_scene_path() -> Option<String> {
     let args: Vec<_> = env::args().collect();
@@ -36,42 +24,31 @@ fn main() {
     // Load scene
     let scene_path = get_scene_path().expect("! scene.json path not provided");
     let scene = Scene::from(&scene_path).expect("Failed to load scene");
-
-    // Setup framebuffer
-    let px_size = 0.01;
-    let width = 500;
-    let height = 500;
-    let mut framebuffer = ppm::Ppm::new(width, height);
+    let (width, height) = scene.camera.resolution;
 
     // Main loop
-    for y in 0..width {
-        for x in 0..height {
-            // Create a ray
-            let dir = Vec3f::new(
-                px_size * (x as i32 - width as i32 / 2) as f32,
-                px_size * (y as i32 - height as i32 / 2) as f32,
-                -1.0,
-            )
-            .normalized();
-            let ray = Ray::new(scene.camera_pos, dir);
-
-            // Raycast scene
-            let mut prev_dist = f32::MAX;
-            let mut color = scene.bg_color;
-            for geom in scene.geometry.iter() {
-                let hit = geom.raycast(&ray);
-                if let Some(res) = hit {
-                    if res.distance < prev_dist {
-                        prev_dist = res.distance;
-                        color = shade(&scene, &res);
-                    }
-                }
-                framebuffer.set(x, height - 1 - y, color);
+    let mut data = vec![Vec3f::new(0.0, 0.0, 0.0); width * height];
+    let chunk_size = num_cpus::get();
+    data.par_chunks_mut(chunk_size)
+        .enumerate()
+        .for_each(|(chunk_idx, chunk)| {
+            let start_idx = chunk_idx * chunk_size;
+            for (offset, value) in chunk.iter_mut().enumerate() {
+                let i = start_idx + offset;
+                let x = i % width;
+                let y = i / height;
+                let ray = scene.camera.get_ray(x, y);
+                *value = scene.trace(&ray);
             }
-        }
-    }
+        });
 
     // Save output
+    let mut framebuffer = ppm::Ppm::new(width, height);
+    for x in 0..width {
+        for y in 0..height {
+            framebuffer.set(x, height - 1 - y, data[x + y * width]);
+        }
+    }
     if let Err(e) = framebuffer.save("image.ppm") {
         eprintln!("Error saving image: {}", e);
     }

@@ -1,6 +1,5 @@
 use std::fs::File;
 use std::io::Write;
-use std::ops::Index;
 
 use crate::vec3f::Vec3f;
 
@@ -21,7 +20,7 @@ pub fn color_to_tuple(color: Vec3f) -> (u8, u8, u8) {
 #[allow(dead_code)]
 impl Ppm {
     pub fn new(width: usize, height: usize) -> Self {
-        let data = vec![(0, 0, 0); (width * height) as usize];
+        let data = vec![(0, 0, 0); width * height];
         Self {
             width,
             height,
