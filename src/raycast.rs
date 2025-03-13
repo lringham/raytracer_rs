@@ -1,6 +1,6 @@
 use crate::vec3f;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct Ray {
     pub origin: vec3f::Vec3f,
     pub direction: vec3f::Vec3f,
@@ -17,17 +17,18 @@ impl Ray {
 }
 
 #[allow(dead_code)]
+#[derive(Copy, Clone)]
 pub struct RaycastResult {
     pub distance: f32,
-    pub hit: vec3f::Vec3f,
+    pub position: vec3f::Vec3f,
     pub normal: vec3f::Vec3f,
 }
 
 impl RaycastResult {
-    pub fn new(distance: f32, hit: vec3f::Vec3f, normal: vec3f::Vec3f) -> Self {
+    pub fn new(distance: f32, position: vec3f::Vec3f, normal: vec3f::Vec3f) -> Self {
         RaycastResult {
             distance,
-            hit,
+            position,
             normal,
         }
     }

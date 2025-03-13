@@ -9,7 +9,7 @@ pub struct Ppm {
     data: Vec<(u8, u8, u8)>,
 }
 
-pub fn color_to_tuple(color: Vec3f) -> (u8, u8, u8) {
+pub fn color_to_tuple(color: &Vec3f) -> (u8, u8, u8) {
     (
         (255.0 * color.x.min(1.0).sqrt()) as u8,
         (255.0 * color.y.min(1.0).sqrt()) as u8,
@@ -28,8 +28,20 @@ impl Ppm {
         }
     }
 
+    pub fn from(width: usize, height: usize, colors: &Vec<Vec3f>) -> Self {
+        let mut data = vec![(0, 0, 0); width * height];
+        for (i, color) in colors.iter().rev().enumerate() {
+            data[i] = color_to_tuple(&color);
+        };
+        Self {
+            width,
+            height,
+            data,
+        }
+    }
+
     pub fn set(&mut self, x: usize, y: usize, color: Vec3f) {
-        self.data[x + y * self.width] = color_to_tuple(color);
+        self.data[x + y * self.width] = color_to_tuple(&color);
     }
 
     pub fn get(&self, x: usize, y: usize) -> Vec3f {

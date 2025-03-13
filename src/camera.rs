@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{raycast::Ray, vec3f::Vec3f};
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Camera {
     pub position: Vec3f,
     pub direction: Vec3f,

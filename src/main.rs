@@ -38,17 +38,12 @@ fn main() {
                 let x = i % width;
                 let y = i / height;
                 let ray = scene.camera.get_ray(x, y);
-                *value = scene.trace(&ray);
+                *value = scene.trace(&ray, 0);
             }
         });
 
     // Save output
-    let mut framebuffer = ppm::Ppm::new(width, height);
-    for x in 0..width {
-        for y in 0..height {
-            framebuffer.set(x, height - 1 - y, data[x + y * width]);
-        }
-    }
+    let framebuffer = ppm::Ppm::from(width, height, &data);
     if let Err(e) = framebuffer.save("image.ppm") {
         eprintln!("Error saving image: {}", e);
     }

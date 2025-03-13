@@ -6,7 +6,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 
 // Sphere
-#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Sphere {
     pub center: vec3f::Vec3f,
     pub radius: f32,

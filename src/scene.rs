@@ -25,25 +25,37 @@ impl Scene {
         Some(scene)
     }
 
-    pub fn trace(&self, ray: &Ray) -> Vec3f {
+    pub fn trace(&self, ray: &Ray, max_iters: usize) -> Vec3f {        
         let mut prev_dist = f32::MAX;
         let mut color = self.bg_color;
+        
+        let mut actual_res : Option<RaycastResult> = None;
         for geom in self.geometry.iter() {
-            let hit = geom.raycast(ray);
-            if let Some(res) = hit {
-                if res.distance < prev_dist {
-                    prev_dist = res.distance;
-                    color = shade(self, &res);
+            let res = geom.raycast(ray);
+            if let Some(hit) = res {
+                if hit.distance < prev_dist {
+                    prev_dist = hit.distance;
+                    color = shade(self, &hit);
+                    actual_res = res;
                 }
             }
         }
+
+        if  max_iters > 0 {
+            if let Some(hit) = actual_res{
+                let new_dir = (ray.origin - hit.position).normalized().reflected(&hit.normal);
+                let new_ray = Ray::new(hit.position, new_dir);
+                color = color + self.trace(&new_ray, max_iters - 1);
+            }
+        }
+        
         color
     }
 }
 
 fn shade(scene: &Scene, res: &RaycastResult) -> Vec3f {
-    let l = (scene.light_pos - res.hit).normalized();
-    let v = (scene.camera.position - res.hit).normalized();
+    let l = (scene.light_pos - res.position).normalized();
+    let v = (scene.camera.position - res.position).normalized();
     let h = (l + v).normalized();
 
     let ambient = 0.1;
