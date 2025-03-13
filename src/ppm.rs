@@ -28,11 +28,11 @@ impl Ppm {
         }
     }
 
-    pub fn from(width: usize, height: usize, colors: &Vec<Vec3f>) -> Self {
+    pub fn from(width: usize, height: usize, colors: &[Vec3f]) -> Self {
         let mut data = vec![(0, 0, 0); width * height];
         for (i, color) in colors.iter().rev().enumerate() {
-            data[i] = color_to_tuple(&color);
-        };
+            data[i] = color_to_tuple(color);
+        }
         Self {
             width,
             height,

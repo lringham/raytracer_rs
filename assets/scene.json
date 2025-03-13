@@ -14,11 +14,6 @@
         "y": 0.8,
         "z": 0.8
     },
-    "material_col": {
-        "x": 0.39,
-        "y": 0.58,
-        "z": 0.93
-    },
     "camera": {
         "position": {
             "x": 0.0,
@@ -36,6 +31,15 @@
             500
         ]
     },
+    "materials": {
+        "cornflower_blue": {
+            "color": {
+                "x": 0.39,
+                "y": 0.58,
+                "z": 0.93
+            }
+        }
+    },
     "geometry": [
         {
             "type": "Sphere",
@@ -46,5 +50,10 @@
             },
             "radius": 1.75
         }
-    ]
+    ],
+    "material_map": {
+        "cornflower_blue": [
+            0
+        ]
+    }
 }
