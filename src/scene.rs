@@ -28,10 +28,10 @@ impl Scene {
         Some(scene)
     }
 
-    pub fn trace(&self, ray: &Ray, max_iters: usize) -> Vec3f {
+    pub fn trace(&self, ray: &Ray, max_iters: usize) -> Vec3f {       
+        // Find nearest 
         let mut prev_dist = f32::MAX;
-        let mut color = self.bg_color;
-
+        let mut color = Vec3f::new(0.0, 0.0, 0.0);
         let mut actual_res: Option<RaycastResult> = None;
         for (i, geom) in self.geometry.iter().enumerate() {
             let res = geom.raycast(ray);
@@ -45,13 +45,14 @@ impl Scene {
             }
         }
 
+        // Recurse
         if max_iters > 0 {
             if let Some(hit) = actual_res {
                 let new_dir = (ray.origin - hit.position)
                     .normalized()
                     .reflected(&hit.normal);
                 let new_ray = Ray::new(hit.position, new_dir);
-                color = color + self.trace(&new_ray, max_iters - 1);
+                color = color + self.trace(&new_ray, max_iters - 1) * 0.95;
             }
         }
 

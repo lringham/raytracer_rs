@@ -39,7 +39,7 @@ fn main() {
                 let x = i % width;
                 let y = i / height;
                 let ray = scene.camera.get_ray(x, y);
-                *value = scene.trace(&ray, 0);
+                *value = scene.trace(&ray, 10);
             }
         });
 

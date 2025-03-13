@@ -38,22 +38,41 @@
                 "y": 0.58,
                 "z": 0.93
             }
+        },
+        "red": {
+            "color": {
+                "x": 1.0,
+                "y": 0.0,
+                "z": 0.0
+            }
         }
     },
     "geometry": [
         {
             "type": "Sphere",
             "center": {
-                "x": 0.0,
+                "x": -1.20,
                 "y": 0.0,
                 "z": -2.0
             },
-            "radius": 1.75
+            "radius": 1
+        },
+        {
+            "type": "Sphere",
+            "center": {
+                "x": 1.20,
+                "y": 0.0,
+                "z": -2.0
+            },
+            "radius": 1
         }
     ],
     "material_map": {
         "cornflower_blue": [
             0
+        ],
+        "red": [
+            1
         ]
     }
 }
