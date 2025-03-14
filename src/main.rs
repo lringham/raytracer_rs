@@ -5,6 +5,7 @@ mod ppm;
 mod raycast;
 mod scene;
 mod vec3f;
+mod light;
 
 use std::env;
 
