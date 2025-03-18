@@ -29,17 +29,13 @@ impl Scene {
     }
 
     pub fn render(&self, ray: &Ray, max_iters: usize) -> Vec3f {
-        let mut color;
-        if let Some(hit) = self.trace(ray) {
-            let material = self.get_material(hit.geom_idx).unwrap();
-            color = shade(self, &hit, &material);
-            if max_iters > 0 {
-                color += self.render(&ray.reflect(&hit.position, &hit.normal), max_iters - 1) * 0.2;
-            }
+        if max_iters == 0 {
+            Vec3f::new(0.0, 0.0, 0.0)
+        } else if let Some(hit) = self.trace(ray) {            
+            self.shade(&hit) + self.render(&ray.reflect(&hit.position, &hit.normal), max_iters - 1) * 0.2
         } else {
-            color = self.bg_color;
+            self.bg_color
         }
-        color
     }
 
     fn get_material(&self, id: usize) -> Option<Material> {
@@ -66,20 +62,21 @@ impl Scene {
         }
         res
     }
-}
 
-fn shade(scene: &Scene, res: &RaycastResult, material: &Material) -> Vec3f {
-    let v = (scene.camera.position - res.position).normalized();
-    let mut color = Vec3f::new(0.0, 0.0, 0.0);
-    for light in scene.lights.iter() {
-        let l = light.light_vector(&res.position);
-        let h = (l + v).normalized();
-
-        let ambient = 0.1;
-        let lambertian = res.normal.dot(&l).max(0.0);
-        let specular = res.normal.dot(&h).max(0.0);
-        let specular = specular.powi(30);
-        color += material.color * (ambient + lambertian) + specular * light.color()
+    fn shade(&self, hit: &RaycastResult) -> Vec3f {
+        let material = self.get_material(hit.geom_idx).unwrap();
+        let v = (self.camera.position - hit.position).normalized();
+        let mut color = Vec3f::new(0.0, 0.0, 0.0);
+        for light in self.lights.iter() {
+            let l = light.light_vector(&hit.position);
+            let h = (l + v).normalized();
+    
+            let ambient = 0.1;
+            let lambertian = hit.normal.dot(&l).max(0.0);
+            let specular = hit.normal.dot(&h).max(0.0);
+            let specular = specular.powi(30);
+            color += material.color * (ambient + lambertian) + specular * light.color()
+        }
+        color
     }
-    color
 }
