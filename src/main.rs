@@ -1,11 +1,11 @@
 mod camera;
 mod geometry;
+mod light;
 mod material;
 mod ppm;
 mod raycast;
 mod scene;
 mod vec3f;
-mod light;
 
 use std::env;
 
@@ -40,7 +40,7 @@ fn main() {
                 let x = i % width;
                 let y = i / height;
                 let ray = scene.camera.get_ray(x, y);
-                *value = scene.trace(&ray, 10);
+                *value = scene.render(&ray, 10);
             }
         });
 

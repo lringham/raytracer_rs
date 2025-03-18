@@ -8,7 +8,6 @@ pub struct PointLight {
     pub color: Vec3f,
 }
 
-
 // Geometry
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type")]

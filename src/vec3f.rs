@@ -14,6 +14,12 @@ impl Vec3f {
         Vec3f { x, y, z }
     }
 
+    pub fn set(&mut self, x: f32, y: f32, z: f32) {
+        self.x = x;
+        self.y = y;
+        self.z = z;
+    }
+
     pub fn add(&self, other: &Vec3f) -> Vec3f {
         Vec3f {
             x: self.x + other.x,
