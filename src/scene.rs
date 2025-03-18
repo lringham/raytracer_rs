@@ -30,21 +30,15 @@ impl Scene {
 
     pub fn render(&self, ray: &Ray, max_iters: usize) -> Vec3f {
         let mut color;
-        let res = self.trace(ray);
-        if let Some(hit) = res {
+        if let Some(hit) = self.trace(ray) {
             let material = self.get_material(hit.geom_idx).unwrap();
             color = shade(self, &hit, &material);
             if max_iters > 0 {
-                if let Some(hit) = res {
-                    color = color
-                        + self.render(&ray.reflect(&hit.position, &hit.normal), max_iters - 1)
-                            * 0.2;
-                }
+                color += self.render(&ray.reflect(&hit.position, &hit.normal), max_iters - 1) * 0.2;
             }
         } else {
             color = self.bg_color;
         }
-
         color
     }
 
@@ -85,7 +79,7 @@ fn shade(scene: &Scene, res: &RaycastResult, material: &Material) -> Vec3f {
         let lambertian = res.normal.dot(&l).max(0.0);
         let specular = res.normal.dot(&h).max(0.0);
         let specular = specular.powi(30);
-        color = color + material.color * (ambient + lambertian) + specular * light.color()
+        color += material.color * (ambient + lambertian) + specular * light.color()
     }
     color
 }

@@ -141,3 +141,11 @@ impl ops::Mul<&Vec3f> for f32 {
         Vec3f::scale(rhs, self)
     }
 }
+
+impl ops::AddAssign<Vec3f> for Vec3f {
+    fn add_assign(&mut self, rhs: Vec3f) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+        self.z += rhs.z;
+    }
+}
