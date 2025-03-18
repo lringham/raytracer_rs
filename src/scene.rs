@@ -67,15 +67,23 @@ impl Scene {
         let material = self.get_material(hit.geom_idx).unwrap();
         let v = (self.camera.position - hit.position).normalized();
         let mut color = Vec3f::new(0.0, 0.0, 0.0);
-        for light in self.lights.iter() {
-            let l = light.light_vector(&hit.position);
-            let h = (l + v).normalized();
-    
+        for light in self.lights.iter() {            
             let ambient = 0.1;
-            let lambertian = hit.normal.dot(&l).max(0.0);
-            let specular = hit.normal.dot(&h).max(0.0);
-            let specular = specular.powi(30);
-            color += material.color * (ambient + lambertian) + specular * light.color()
+            let l = light.light_vector(&hit.position);
+            if let Some(_) = self.trace(&Ray::new(hit.position, l)) {
+                // This is a hack and doesnt account for objects
+                // being behind the light position. In reality
+                // the light itself should have a geometry as well
+                // that we can check against instead of using distance 
+                // deltas.
+                color += material.color * ambient;
+            } else {
+                let h = (l + v).normalized();
+                let lambertian = hit.normal.dot(&l).max(0.0);
+                let specular = hit.normal.dot(&h).max(0.0);
+                let specular = specular.powi(30);
+                color += material.color * (ambient + lambertian) + specular * light.color()
+            }
         }
         color
     }
