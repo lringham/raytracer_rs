@@ -6,6 +6,6 @@ Glaring omissions:
  - incomplete camera class
 
 ## Ideas
-[ ] use kameo for multi-computer computation
-[ ] torrance-sparrow
-[ ] path tracing
+[ ] use kameo for multi-computer computation  
+[ ] torrance-sparrow  
+[ ] path tracing  
