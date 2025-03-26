@@ -7,7 +7,8 @@ Knocking the rust off my rust skills with a small raytracer... for fun!
  - Basic shapes and materials
  - Shadows
  - Progress bar
- - Basic gRPC integration (in gRPC branch)
+ - Basic gRPC integration (gRPC branch)
+ - Very basic image viewer (gRPC branch)
 
 ## Glaring omissions
  - refraction  
