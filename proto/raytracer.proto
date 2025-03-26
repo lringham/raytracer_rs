@@ -1,0 +1,13 @@
+syntax = "proto3";
+package raytracer;
+
+service FileDispatcher {
+    rpc GetFilePath (FilePathRequest) returns (FilePathReply);
+}
+
+message FilePathRequest {
+}
+
+message FilePathReply {
+    string filepath = 1;
+}

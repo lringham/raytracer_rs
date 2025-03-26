@@ -3,8 +3,23 @@ name = "rt"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]] 
+name = "rt_server"
+path = "src/server.rs"
+
+[[bin]] 
+name = "rt_client"
+path = "src/client.rs"
+
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 rayon = "1.10.0"
 num_cpus = "1.0"
+tonic = "0.13.0"
+prost = "0.13"
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+simple-tqdm = { version = "*", features = ["rayon"] }
+
+[build-dependencies]
+tonic-build = "*"

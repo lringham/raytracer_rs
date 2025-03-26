@@ -83,6 +83,14 @@ impl Vec3f {
     pub fn reflected(&self, normal: &Vec3f) -> Vec3f {
         2.0 * (normal.dot(self) * normal) - self
     }
+
+    pub fn refract(&mut self, normal: &Vec3f) {
+        *self = 2.0 * (normal.dot(self) * normal) - *self;
+    }
+
+    pub fn refracted(&self, normal: &Vec3f) -> Vec3f {
+        2.0 * (normal.dot(self) * normal) - self
+    }
 }
 
 // Operators
