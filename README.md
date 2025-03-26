@@ -1,11 +1,18 @@
 # rt
 Knocking the rust off my rust skills with a small raytracer... for fun!
 
-Glaring omissions:
- - refraction
- - incomplete camera class
+## Features
+ - Scene serialization from json file
+ - Multi-threaded rendering
+ - Basic shapes and materials
+ - Shadows
+ - Progress bar
+ - Basic gRPC integration (in gRPC branch)
+
+## Glaring omissions
+ - refraction  
+ - incomplete camera class  
 
 ## Ideas
-[ ] use kameo for multi-computer computation  
 [ ] torrance-sparrow  
-[ ] path tracing  
+[ ] path-tracing  
