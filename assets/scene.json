@@ -17,8 +17,8 @@
         },
         "fovy": 1.0,
         "resolution": [
-            500,
-            500
+            400,
+            400
         ]
     },
     "materials": {

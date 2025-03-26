@@ -72,7 +72,7 @@ impl Scene {
         for light in self.lights.iter() {
             let ambient = 0.1;
             let l = light.light_vector(&hit.position);
-            if let Some(_) = self.trace(&Ray::new(hit.position, l)) {
+            if self.trace(&Ray::new(hit.position, l)).is_some() {
                 // This is a hack and doesnt account for objects
                 // being behind the light position. In reality
                 // the light itself should have a geometry as well

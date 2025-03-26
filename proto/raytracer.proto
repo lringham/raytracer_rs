@@ -3,6 +3,8 @@ package raytracer;
 
 service FileDispatcher {
     rpc GetFilePath (FilePathRequest) returns (FilePathReply);
+    rpc GetImageData (ImageDataRequest) returns (ImageDataReply);
+    rpc UpdateImageData (ImageDataReply) returns (FilePathReply);
 }
 
 message FilePathRequest {
@@ -10,4 +12,19 @@ message FilePathRequest {
 
 message FilePathReply {
     string filepath = 1;
+}
+
+message ImageDataRequest {
+}
+
+message ImageDataReply {
+    uint64 width = 1;
+    uint64 height = 2;
+    repeated ImageData data = 3;
+}
+
+message ImageData {
+    float r = 1;
+    float g = 2; 
+    float b = 3;
 }

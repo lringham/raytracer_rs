@@ -11,6 +11,10 @@ path = "src/server.rs"
 name = "rt_client"
 path = "src/client.rs"
 
+[[bin]] 
+name = "rt_viewer"
+path = "src/viewer.rs"
+
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -18,6 +22,7 @@ rayon = "1.10.0"
 num_cpus = "1.0"
 tonic = "0.13.0"
 prost = "0.13"
+minifb = "0.28"
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 simple-tqdm = { version = "*", features = ["rayon"] }
 
