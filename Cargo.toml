@@ -5,15 +5,15 @@ edition = "2021"
 
 [[bin]] 
 name = "rt_server"
-path = "src/server.rs"
+path = "server/server.rs"
 
 [[bin]] 
-name = "rt_client"
-path = "src/client.rs"
+name = "rt_renderer"
+path = "renderer/renderer.rs"
 
 [[bin]] 
 name = "rt_viewer"
-path = "src/viewer.rs"
+path = "viewer/viewer.rs"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }

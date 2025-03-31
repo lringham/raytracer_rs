@@ -52,7 +52,7 @@ fn render(scene: &Scene) -> Vec<Vec3f> {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Requesting scene file...");
     let mut client = FileDispatcherClient::connect("http://[::1]:50051").await?;
-    let request = tonic::Request::new(FilePathRequest {});
+    let request = tonic::Request::new(FilePathRequest{});
     let response = client.get_file_path(request).await?;
     let scene_path = response.get_ref().filepath.clone();
     let scene = Scene::from(&scene_path).expect("Failed to load scene!");
